@@ -27,7 +27,6 @@ Etapa 3
 
 Para a próxima etapa, decidi mudar o nome da “lista_tokens” para “char_especiais”, uma vez que ela não seria a lista de tokens em si, e sim uma lista auxiliar para ajudar na identificação de tokens. Também defini 100 como “TAMANHO_MAXIMO” e adicionei duas novas listas com tamanho maximo de 100, a primeira se chamada “lista_lexemas” que funcionará como a futura tabela de simbolos, já a segunda foi nomeada como “lista_tokens” que como o próprio nome diz irá armazenar os tokens. 
 
-“Dessa etapa em diante não terá foto dos códigos, infelizmente fui fazendo e esqueci de ir printando a tela” 
 
  
 
