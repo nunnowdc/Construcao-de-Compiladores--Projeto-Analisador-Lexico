@@ -1,10 +1,16 @@
-Relatório com o passo a passo que realizei 
+Relatório com o passo a passo que realizei para construir o analisador léxico 
 
  
 
  
 
-Tendo como base algumas pesquisas que realizei e o que meus companheiros de grupo haviam realizado em minha ausência, tentei por eu mesmo criar um código capaz de separar o arquivo usado como entrada em duas listas destintas. O primeiro arquivo receberia os tokens e identificadores, já o segundo iria receber justamente os símbolos.  
+Para construir esta etapa do processo de compilação, tomei como base uma ideia parecida como os separadores de moedas baseados em tamanho. Nos separadores, as moedas percorrem uma rampa com furos que vão aumentando gradualmente de acordo com o tamanho de cada moeda, isso é feito no intuito de que as moedas “fiquem” no caminho até que reste apenas uma opção. Nessa analogia as moedas seriam os lexemas e caracteres e os buracos na rampa seriam as condicionais do código. 
+
+Minha ideia era com que os caracteres especiais ou palavras fossem lidos de um determinado arquivo usado como entrada no código e em seguida passassem por uma sequência de condicionais que conseguissem distinguir em que classificação esses caracteres ou palavras se encaixariam. 
+
+ 
+
+Tendo como base essa ideia principal, pesquisas que realizei e o que meus companheiros de grupo haviam realizado em minha ausência, tentei por eu mesmo criar um código capaz de separar o conteúdo do arquivo usado como entrada em duas listas destintas. A primeira lista seria a tabela de tokens e receberia os tokens e identificadores, já a segunda se chamaria lista de símbolos e iria receber justamente os símbolos. 
 
  
 
