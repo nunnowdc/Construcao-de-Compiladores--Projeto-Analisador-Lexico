@@ -69,12 +69,12 @@ int add_symbol(char ***symbol_table, int *symbol_count, char *symbol) {
     *symbol_table = realloc(*symbol_table, (*symbol_count + 1) * sizeof(char *));
     if (*symbol_table == NULL) {
         printf("Erro de alocação de memória para a tabela de símbolos.\n");
-        exit(1);
+        exit(1);  // Encerra o programa por inteiro se ocorrer erro na realocação
     }
     (*symbol_table)[*symbol_count] = strdup(symbol); // strdup reserva espaço/memoria para uma string específica
     if ((*symbol_table)[*symbol_count] == NULL) {
         printf("Erro de alocação de memória para o símbolo.\n");
-        exit(1);
+        exit(1);  // Encerra o programa por inteiro caso nao tenha memoria suficiente para o simbolo novo
     }
     (*symbol_count)++;
     return *symbol_count; // Retorna índice 
@@ -114,8 +114,8 @@ int main() {
     int indice_palavra = 0;
 
     // Contadores de ID, NUM, TEXTO e COMP
-    int id_counter = 1;
-    int comp_counter = 1;
+    int ID_counter = 1;
+    int COMP_counter = 1;
 
     // Tamanhos dinâmicos para os arrays
     int tamanho_lista_tokens = 0;
@@ -167,7 +167,7 @@ int main() {
         if (caractere == '<') {
             char menor_que[] = "<";
             char token_entry[50];
-            snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", comp_counter++);
+            snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++);
             add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
             if (find_symbol(symbol_table, symbol_count, menor_que) == -1) {
                 add_symbol(&symbol_table, &symbol_count, menor_que);
@@ -188,7 +188,7 @@ int main() {
                 ID_buffer[indice_id] = '\0';  // Termina a string
 
                 // Adiciona como identificador (ID)
-                snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", id_counter++);
+                snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", ID_counter++);
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                 if (find_symbol(symbol_table, symbol_count, ID_buffer) == -1) {
@@ -197,7 +197,7 @@ int main() {
 
                 // Adiciona '>' como comparador
                 char maior_que[] = ">";
-                snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", comp_counter++);
+                snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++);
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                 if (find_symbol(symbol_table, symbol_count, maior_que) == -1) {
@@ -213,7 +213,9 @@ int main() {
             if (indice_palavra < 255) {
                 palavra_buffer[indice_palavra++] = caractere;
             }
-        } else if (caractere == '"') {  // Verifica se é o início ou fim de um texto entre aspas
+        } 
+
+        else if (caractere == '"') {  // Verifica se é o início ou fim de um texto entre aspas
             char texto_buffer[256];
             int indice_texto = 0;
             // Continua até encontrar o fechamento da aspa
@@ -235,7 +237,9 @@ int main() {
 
             continue; // Continue para não processar mais este caractere
 
-        } else if (caractere == '.' && indice_palavra > 0 && isdigit(palavra_buffer[indice_palavra-1])) {
+        } 
+
+        else if (caractere == '.' && indice_palavra > 0 && isdigit(palavra_buffer[indice_palavra-1])) {
             // Se encontramos um ponto logo após um número, verificamos se é um decimal
             palavra_buffer[indice_palavra++] = caractere;  // Adiciona o ponto ao buffer
             // Continua lendo após o ponto para verificar se são dígitos
@@ -288,7 +292,7 @@ int main() {
                     } else {
                         // Adiciona como identificador (ID)
                         char token_entry[50];
-                        snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", id_counter++); // formatar uma string e guardar o resultado em um array
+                        snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", ID_counter++); // formatar uma string e guardar o resultado em um array
                         add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                         // Adiciona o número inteiro à tabela de símbolos
@@ -319,7 +323,7 @@ int main() {
             if (buscaComparador(possivel_comp, vetor_comp, tamanho_lista_comp)) {
                 // Formata "(COMP,n)" e incrementa o contador
                 char token_entry[50];
-                snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", comp_counter++); // formatar uma string e guardar o resultado em um array
+                snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++); // formatar uma string e guardar o resultado em um array
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                 // Adiciona o operador de comparação à tabela de símbolos
@@ -333,7 +337,7 @@ int main() {
                 if (caractere == '.' || caractere == '#' || caractere == '@' || caractere == '$') {
                     // Formata "(ID,n)" e incrementa o contador
                     char token_entry[50];
-                    snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", id_counter++); // formatar uma string e guardar o resultado em um array
+                    snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", ID_counter++); // formatar uma string e guardar o resultado em um array
                     add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                     // Adiciona o caractere à tabela de símbolos
@@ -356,9 +360,11 @@ int main() {
                 snprintf(token_entry, sizeof(token_entry), "%c%c ", caractere, proximo_caractere); // formatar uma string e guardar o resultado em um array
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
             }
+            
             else {
                 ungetc(proximo_caractere, arquivo);  // Devolve o caractere se não for o esperado
             }
+
             if ((caractere == '&' && proximo_caractere != '&') || (caractere == '|' && proximo_caractere != '|')) {
                 
                 // Adiciona o caractere à tabela de símbolos
@@ -367,7 +373,7 @@ int main() {
                     add_symbol(&symbol_table, &symbol_count, simbolo);
                 }
                 char token_entry[50];
-                snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", id_counter++); // formatar uma string e guardar o resultado em um array
+                snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", ID_counter++); // formatar uma string e guardar o resultado em um array
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
             }
         }
