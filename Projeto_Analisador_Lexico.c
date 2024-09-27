@@ -36,11 +36,11 @@ int buscaComparador(char *possivel_comparador, char *lista[], int tamanho_lista)
 // Função para verificar se a palavra é um número
 int is_number(char *palavra, int *is_decimal) {
     int has_dot = 0;
-    if (palavra[0] == '\0') { // String vazia não é um número
+    if (palavra[0] == '\0') { // Verifica se a string é vazia
         return 0;
     } 
-    for (int i = 0; palavra[i] != '\0'; i++) {
-        if (isdigit((unsigned char)palavra[i])) {
+    for (int i = 0; palavra[i] != '\0'; i++) {  // Verifica caractere por caractere
+        if (isdigit((unsigned char)palavra[i]) == 1) {
             continue; // Se for dígito, continua
         } 
         else if (palavra[i] == '.' && !has_dot) {
@@ -135,12 +135,14 @@ int main() {
     // Lendo os caracteres do arquivo um por um
     while ((caractere = fgetc(arquivo)) != EOF) {
         // Verifica se estamos dentro de um comentário de bloco
-        if (dentro_comentario_bloco) {
+            // BLOCO DE COMENTÁRIO
+        if (dentro_comentario_bloco == 1) { 
             if (caractere == '*') {  
-                int proximo_caractere = fgetc(arquivo);
+                int proximo_caractere = fgetc(arquivo);  // Recebe o proximo caractere do arquivo
                 if (proximo_caractere == '/') {
                     dentro_comentario_bloco = 0;  // Saímos do comentário de bloco
-                } else {
+                } 
+                else {
                     ungetc(proximo_caractere, arquivo);  // Devolve o caractere se não for '/'
                 }
             }
@@ -148,26 +150,30 @@ int main() {
         }
 
         // Verifica se encontramos o início de um comentário
+                // COMENTARIO COMUM
         if (caractere == '/') {
-            int proximo_caractere = fgetc(arquivo);
+            int proximo_caractere = fgetc(arquivo);  // Recebe o proximo caractere do arquivo
             if (proximo_caractere == '/') {
                 // Ignora até o fim da linha (comentário de uma linha)
                 while ((caractere = fgetc(arquivo)) != '\n' && caractere != EOF);
                 continue; // Continue com a próxima iteração
-            } else if (proximo_caractere == '*') {
+            } 
+            else if (proximo_caractere == '*') {
                 // Início de comentário de bloco
                 dentro_comentario_bloco = 1;
                 continue; // Continue com a próxima iteração
-            } else {
+            } 
+            else {
                 ungetc(proximo_caractere, arquivo);  // Devolve o caractere lido
             }
         }
 
         // Verifica se encontramos '<'
+                // BIBLIOTECA
         if (caractere == '<') {
             char menor_que[] = "<";
             char token_entry[50];
-            snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++);
+            snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++); // formatar uma string e guardar o resultado em um array
             add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
             if (find_symbol(symbol_table, symbol_count, menor_que) == -1) {
                 add_symbol(&symbol_table, &symbol_count, menor_que);
@@ -188,7 +194,7 @@ int main() {
                 ID_buffer[indice_id] = '\0';  // Termina a string
 
                 // Adiciona como identificador (ID)
-                snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", ID_counter++);
+                snprintf(token_entry, sizeof(token_entry), "(ID, %d) ", ID_counter++); // formatar uma string e guardar o resultado em um array
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                 if (find_symbol(symbol_table, symbol_count, ID_buffer) == -1) {
@@ -197,7 +203,7 @@ int main() {
 
                 // Adiciona '>' como comparador
                 char maior_que[] = ">";
-                snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++);
+                snprintf(token_entry, sizeof(token_entry), "(COMP, %d) ", COMP_counter++); // formatar uma string e guardar o resultado em um array
                 add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
                 if (find_symbol(symbol_table, symbol_count, maior_que) == -1) {
@@ -207,7 +213,7 @@ int main() {
             continue;  // Não processa mais o caractere após '>'
         }
 
-        // Verifica se o caractere é uma letra, dígito ou '_' (parte de uma palavra)
+        // ACEITA PALACRAS COM NUMEROS E _ NO MEIO ex: num_1 ou palavra_2
         if (isalnum(caractere) || caractere == '_') {
             // Adiciona o caractere ao buffer da palavra
             if (indice_palavra < 255) {
@@ -215,66 +221,66 @@ int main() {
             }
         } 
 
+                // TEXTO ENTRE ASPAS
         else if (caractere == '"') {  // Verifica se é o início ou fim de um texto entre aspas
             char texto_buffer[256];
             int indice_texto = 0;
             // Continua até encontrar o fechamento da aspa
             while ((caractere = fgetc(arquivo)) != EOF && caractere != '"') {
                 if (indice_texto < 255) { // Previne overflow
-                    texto_buffer[indice_texto++] = caractere;
+                    texto_buffer[indice_texto++] = caractere; // Pega tudo que esta dentro das aspas
                 }
             }
-            texto_buffer[indice_texto] = '\0';  // Adiciona o terminador nulo
+            texto_buffer[indice_texto] = '\0';  // Adiciona o terminador nulo para ser uma string comum
 
-            // Adiciona as aspas ao texto para a tabela de símbolos
             char texto_com_aspas[258];
-            snprintf(texto_com_aspas, sizeof(texto_com_aspas), "\"%s\"", texto_buffer);
-
+            snprintf(texto_com_aspas, sizeof(texto_com_aspas), "\"%s\"", texto_buffer); // formatar uma string e guardar o resultado em um array
             // Formata o token de texto
             char token_entry[50];
-            snprintf(token_entry, sizeof(token_entry), "(TEXTO, %s)", texto_com_aspas);
+            snprintf(token_entry, sizeof(token_entry), "(TEXTO, %s)", texto_com_aspas); // formatar uma string e guardar o resultado em um array
             add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
             continue; // Continue para não processar mais este caractere
 
         } 
-
+        
+        //  verifica se o caractere lido é um ponto
         else if (caractere == '.' && indice_palavra > 0 && isdigit(palavra_buffer[indice_palavra-1])) {
             // Se encontramos um ponto logo após um número, verificamos se é um decimal
             palavra_buffer[indice_palavra++] = caractere;  // Adiciona o ponto ao buffer
-            // Continua lendo após o ponto para verificar se são dígitos
-            while ((caractere = fgetc(arquivo)) != EOF && isdigit(caractere)) {
+            // Continua lendo após o ponto até que leia algo diferente de um numero
+            while ((caractere = fgetc(arquivo)) != EOF && isdigit(caractere) == 1) {
                 if (indice_palavra < 255) {
                     palavra_buffer[indice_palavra++] = caractere;  // Adiciona os dígitos após o ponto
                 }
             }
             palavra_buffer[indice_palavra] = '\0';  // Termina a palavra
 
-            // Verifica se o número completo é um número decimal
+                // Adiciona o numero decinal
             char token_entry[50];
             snprintf(token_entry, sizeof(token_entry), "(NUM_DEC, %s) ", palavra_buffer); // formatar uma string e guardar o resultado em um array
             add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
-            // Limpa o buffer
+            // Esvazia o buffer
             indice_palavra = 0;
             ungetc(caractere, arquivo);  // Devolve o caractere para não perder processamento
         }
-        else {
+        else { // EXECUTA SE FOR O COMEÇO DE UMA NOVA PALAVRA
             // Se não for letra nem dígito, terminamos a palavra
             if (indice_palavra > 0) {
                 palavra_buffer[indice_palavra] = '\0';  // Adiciona o terminador nulo
 
-                // Verifica se é uma palavra reservada
+                // VERIFICA SE É PALAVRA RESERVADA
                 if (buscaPalavra(palavra_buffer, palavras_reservadas, tamanho_lista_palavras_reservadas)) {
                     // É uma palavra reservada, adiciona à lista de tokens
                     char token_entry[50];
                     snprintf(token_entry, sizeof(token_entry), "%s ", palavra_buffer); // formatar uma string e guardar o resultado em um array
                     add_token(&lista_tokens, &tamanho_lista_tokens, token_entry);
 
-                } else {
-                    int decimal = 0;
-                    // Verifica se é um número
-                    if (is_number(palavra_buffer, &decimal)) {
+                } 
+                else {  // VERIFICA SE É NUMERO
+                    int decimal = 0; 
+                    if (is_number(palavra_buffer, &decimal)) { // verifica se é ou nao decimal
                         if (decimal == 1) {
                             // Adiciona número decimal
                             char token_entry[50];
@@ -306,7 +312,8 @@ int main() {
                 // Limpa o buffer
                 indice_palavra = 0;
             }
-            // Verifica se o caractere é um operador de comparação
+
+            // VERIFICA SE O CARACTERE É UM COMPARADOR 
             char possivel_comp[3] = {caractere, '\0', '\0'};
             if ((caractere == '>' || caractere == '<' || caractere == '=' || caractere == '!')) {
                 // Verifica se é um operador de dois caracteres
@@ -332,7 +339,7 @@ int main() {
                 }
             }
             // Verifica se o caractere é um caractere especial
-            else if (buscaCaractere(caractere, char_especiais, tamanho_lista_char_especiais)) {
+            else if (buscaCaractere(caractere, char_especiais, tamanho_lista_char_especiais) == 1) {
                 // Verifica se o caractere é um dos especiais a serem tratados como (ID, count)
                 if (caractere == '.' || caractere == '#' || caractere == '@' || caractere == '$') {
                     // Formata "(ID,n)" e incrementa o contador
@@ -345,7 +352,8 @@ int main() {
                     if (find_symbol(symbol_table, symbol_count, simbolo) == -1) {
                         add_symbol(&symbol_table, &symbol_count, simbolo);
                     }
-                } else {
+                } 
+                else { // ADICIONA O CARACTERE ESPECIAL DO VETOR NA LISTA DE TOKENS
                     // Formata '%c' para caracteres especiais não tratados como (ID, count)
                     char token_entry[50];
                     snprintf(token_entry, sizeof(token_entry), "%c ", caractere); // formatar uma string e guardar o resultado em um array
@@ -353,6 +361,7 @@ int main() {
                 }
             }
 
+            // SE NAO ESTIVER NOS CHAR_ESPECIAIS
             int proximo_caractere = fgetc(arquivo);
             if ((caractere == '&' && proximo_caractere == '&') || (caractere == '|' && proximo_caractere == '|')) {
                 // Adiciona os operadores lógicos à lista de tokens
