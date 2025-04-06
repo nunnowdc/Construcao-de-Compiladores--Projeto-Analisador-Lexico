@@ -1,10 +1,10 @@
-Relatório com o passo a passo que realizei para construir o analisador léxico 
+**Relatório com o passo a passo que realizei para construir o analisador léxico **
 
  
 
  
 
-Para desenvolver esta etapa do processo de compilação, utilizei como referência uma abordagem semelhante à dos separadores de moedas, que são organizados de acordo com o tamanho. Nos separadores, as moedas deslizam por uma rampa repleta de furos que aumentam gradualmente em diâmetro, permitindo que cada moeda permaneça em seu caminho até que reste apenas uma opção. Nessa analogia, os lexemas e caracteres correspondem às moedas, enquanto os furos na rampa representam as condicionais do código. 
+*Para desenvolver esta etapa do processo de compilação, utilizei como referência uma abordagem semelhante à dos separadores de moedas, que são organizados de acordo com o tamanho. Nos separadores, as moedas deslizam por uma rampa repleta de furos que aumentam gradualmente em diâmetro, permitindo que cada moeda permaneça em seu caminho até que reste apenas uma opção. Nessa analogia, os lexemas e caracteres correspondem às moedas, enquanto os furos na rampa representam as condicionais do código. 
 
 Minha ideia consiste em que os caracteres especiais ou palavras sejam lidos de um determinado arquivo usado como entrada no código. Em seguida, passarão por uma sequência de condicionais capazes de distinguir e classificar adequadamente cada um deles. 
 
@@ -178,4 +178,4 @@ Etapa 14 (arrumar o contador dos números)
 
 Essa etapa foi para corrigir como os números eram vistos no código, antes eles recebiam o token (NUM_DEC ou NUM_INT, count) e o seu símbolo era o número literal. Porém na análise léxica os números não vão pra lista de símbolos e seu token é no formato (NUM_DEC ou NUM_INT, número literal). 
 
-Para mudar esse funcionamento, bastou remover a parte do código em que os números eram inseridos na lista de símbolos e mudar o count pelo buffer de palavra (que representa o número). 
+Para mudar esse funcionamento, bastou remover a parte do código em que os números eram inseridos na lista de símbolos e mudar o count pelo buffer de palavra (que representa o número). *
