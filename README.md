@@ -4,7 +4,7 @@
 
  
 
-*Para desenvolver esta etapa do processo de compilação, utilizei como referência uma abordagem semelhante à dos separadores de moedas, que são organizados de acordo com o tamanho. Nos separadores, as moedas deslizam por uma rampa repleta de furos que aumentam gradualmente em diâmetro, permitindo que cada moeda permaneça em seu caminho até que reste apenas uma opção. Nessa analogia, os lexemas e caracteres correspondem às moedas, enquanto os furos na rampa representam as condicionais do código. 
+Para desenvolver esta etapa do processo de compilação, utilizei como referência uma abordagem semelhante à dos separadores de moedas, que são organizados de acordo com o tamanho. Nos separadores, as moedas deslizam por uma rampa repleta de furos que aumentam gradualmente em diâmetro, permitindo que cada moeda permaneça em seu caminho até que reste apenas uma opção. Nessa analogia, os lexemas e caracteres correspondem às moedas, enquanto os furos na rampa representam as condicionais do código.
 
 Minha ideia consiste em que os caracteres especiais ou palavras sejam lidos de um determinado arquivo usado como entrada no código. Em seguida, passarão por uma sequência de condicionais capazes de distinguir e classificar adequadamente cada um deles. 
 
@@ -20,7 +20,7 @@ Com base nesse objetivo, iniciei a produção do código.
 
  
 
-Etapa 1 (função de buscar caracteres numa lista) 
+**Etapa 1 (função de buscar caracteres numa lista)** 
 
 Implementei uma função que retorna um inteiro, seu nome foi “buscaLista” (posteriormente se tornou “buscaCaractere”). Essa função recebe como parâmetro um caractere, a lista a ser percorrida e o tamanho da lista. Após sua implementação, realizei um teste definindo um caractere específico e alguns caracteres especiais na lista de tokens. Como planejado, deu certo.   
 
@@ -28,7 +28,7 @@ Implementei uma função que retorna um inteiro, seu nome foi “buscaLista” (
 
  
 
-Etapa 2 (ler os caracteres de um arquivo) 
+**Etapa 2 (ler os caracteres de um arquivo)** 
 
 Após concluir essa etapa, meu próximo objetivo foi permitir que o programa recebesse como entrada um arquivo, verificando cada caractere em relação à lista de tokens previamente estabelecida. O arquivo selecionado foi um código padrão em C que imprime “Hello World!”. Por mais que a implementação tenha funcionado, notei que as quebras de linha “\n” não estavam sendo reconhecidas como parte da lista, enquanto os espaços em branco ‘  ‘  estavam sendo considerados como elementos da minha lista de tokens. 
 
@@ -37,14 +37,14 @@ Após concluir essa etapa, meu próximo objetivo foi permitir que o programa rec
 
  
 
-Etapa 3 (criar lista de lexemas e tabela de tokens) 
+**Etapa 3 (criar lista de lexemas e tabela de tokens)** 
 
 Para a próxima etapa, decidi renomear a “lista_tokens” para “char_especiais”, uma vez que ela não representa a lista de tokens propriamente dita, mas sim uma lista auxiliar para identificar tokens. Além disso, defini o valor 100 como “TAMANHO_MAXIMO” e adicionei duas novas listas, também com tamanho máximo de 100. A primeira, denominada “lista_lexemas”, funcionará como a futura tabela de símbolos, enquanto a segunda, intitulada “tabela_tokens”, será responsável por armazenar os tokens. 
 
 
  
 
-Etapa 4 (alocar os vetores dinamicamente) 
+**Etapa 4 (alocar os vetores dinamicamente)** 
 
 Na etapa 4, percebi que seria uma péssima ideia definir um tamanho máximo para os vetores, uma vez que o tamanho varia conforme o arquivo de entrada. Portanto, essa etapa foi dedicada à correção desse erro. Para isso, utilizei variáveis ponteiro para alocar valores dinamicamente. Sempre que um novo valor precisava ser adicionado, empreguei a função “realloc” da biblioteca “stdlib.h”, Sempre verificando se os vetores estavam vazios (== NULL) para retornar um erro de alocação, quando necessário. 
 
@@ -54,7 +54,7 @@ Na etapa 4, percebi que seria uma péssima ideia definir um tamanho máximo para
 
  
 
-Etapa 5 (ignorar comentários comuns e blocos de comentários) 
+**Etapa 5 (ignorar comentários comuns e blocos de comentários)** 
 
 Nesta etapa, busquei corrigir o erro identificado na etapa 2, no qual o código considerava as quebras de linha “\n” ao formar a lista de tokens e a tabela de símbolos. Para resolver isso, adicionei uma condição que garante que apenas (caracteres !=  “\n”) sejam incluídos nas duas listas. 
 
@@ -70,13 +70,13 @@ Se um comentário de bloco for identificado, o programa ignorará todos os carac
 
  
 
-Etapa 6 (definir um buffer para armazenar símbolos) 
+**Etapa 6 (definir um buffer para armazenar símbolos)** 
 
 Até o momento, a tabela de símbolos e a lista de tokens estavam recebendo apenas caracteres que não eram espaços em branco, quebras de linha (‘\n’) ou caracteres pertencentes a comentários. Para melhorar esse processo, criei uma variável denominada palavra_buffer, com capacidade para armazenar 256 caracteres (palavra_buffer[256]). Essa variável tem a finalidade de acumular os caracteres lidos até que um char_escpecial, uma quebra de linha, um espaço em branco ou o início de um comentário seja detectado. Assim que um desses caracteres for identificado, o conteúdo do buffer é transferido para a tabela de símbolos. Caso o caractere responsável por interromper o preenchimento do buffer seja um char_especial, ele é adicionado à lista de tokens. No entanto, se for uma quebra de linha, um espaço em branco ou o início de um comentário, esses caracteres são simplesmente desconsiderados. 
 
  
 
-Etapa 7 (identificar palavras reservadas através do buffer) 
+**Etapa 7 (identificar palavras reservadas através do buffer)** 
 
 Na etapa 7, adicionei um novo array denominado palavras_reservadas, que contém todas as palavras reservadas listadas no arquivo Excel disponibilizado: {"int", "float", "char", "boolean", "void", "if", "else", "for", "while", "scanf", "printf", "main", "return"}. 
 
@@ -92,7 +92,7 @@ Além disso, implementei uma função no código chamada “buscaPalavra”, seu
 
  
 
-Etapa 8 (printar lista de símbolos e tabela de tokens) 
+**Etapa 8 (printar lista de símbolos e tabela de tokens)** 
 
 Etapa 8 foi apenas para gerar os prints no fim do código tanto da tabela de tokens quanto da lista de símbolos. Ambos printavam com o auxílio de um for que percorria todos os elementos do array e ia printando. Depois dos prints, também coloquei mais 2 fors para desalocar corretamente todos os elementos de cada array, garantindo a liberação adequada da memória utilizada. 
 
@@ -102,7 +102,7 @@ Etapa 8 foi apenas para gerar os prints no fim do código tanto da tabela de tok
 
  
 
-Etapa 9 (dividir os símbolos em strings e números) 
+**Etapa 9 (dividir os símbolos em strings e números)** 
 
 Nesta etapa, o objetivo foi verificar os símbolos lidos do buffer para determinar se eles são números ou strings. Dependendo de como cada símbolo for classificado, ele será inserido na lista de tokens como identificadores: (NUM, contador) para números e (ID, contador) para strings.  
 
@@ -114,7 +114,7 @@ No código, se a função is_number() retornar 1, o número será adicionado à 
 
  
 
-Etapa 10 (evitar valores iguais na lista de simbolos) 
+**Etapa 10 (evitar valores iguais na lista de simbolos)** 
 
 Etapa 10 foi para que o código verificasse se um novo token do tipo NUM ou ID já possui um equivalente na lista de tokens, ou seja, caso o código leia do arquivo um símbolo que já foi lido anteriormente, não será adicionado novamente na tabela de símbolos. 
 
@@ -126,7 +126,7 @@ Para tal, uma função find_symbol() foi adicionada, essa função recebe como p
 
  
 
-Etapa 11 (identificar comparadores e nomes de bibliotecas) 
+**Etapa 11 (identificar comparadores e nomes de bibliotecas)** 
 
 Essa etapa serviu para classificar os nomes de biblioteca como apenas um (ID, count). Também aproveitei para adicionar um novo vetor chamado vetor_comp[] e uma nova categoria de token, os (COMP, count), neles são inclusos {">=", "<=", "==", "!=", ">", "<"}. 
 
@@ -146,7 +146,7 @@ Após definir quem seria o possível comparador, basta jogar o possível compara
 
  
 
-Etapa 12 (classificar caracteres nao char_especiais e &, && ||) 
+**Etapa 12 (classificar caracteres nao char_especiais e &, && ||)** 
 
 Classificar alguns caracteres especiais como (ID, count) ex: '.', '#', '@' ou '$'. 
 
@@ -168,14 +168,14 @@ Se por acaso o caractere não pertencer ao vetor char_especias[], só resta ser 
 
  
 
-Etapa 13 (separar números em inteiros e decimais) 
+**Etapa 13 (separar números em inteiros e decimais)**
 
 Separar números inteiros dos decimais na tabela de tokens, para isso, criei uma função chamada is_number() que recebia como parâmetro o buffer de palavra lida e uma variável recém-criada chamada decimal, essa função é capaz de identificar se uma determinada string é um número decimal ou não, se for decimal, add o token (NUM_DEC, count) na tabela de tokens e o número literal na lista de símbolos, mas se o número for inteiro, o token add na tabela de de tokens é o (NUM_INT, count) e o número literal na lista de símbolos. Caso a string não fosse um número adicionaria o símbolo e o token do ID em duas devidas listas  
 
  
 
-Etapa 14 (arrumar o contador dos números) 
+**Etapa 14 (arrumar o contador dos números)**
 
 Essa etapa foi para corrigir como os números eram vistos no código, antes eles recebiam o token (NUM_DEC ou NUM_INT, count) e o seu símbolo era o número literal. Porém na análise léxica os números não vão pra lista de símbolos e seu token é no formato (NUM_DEC ou NUM_INT, número literal). 
 
-Para mudar esse funcionamento, bastou remover a parte do código em que os números eram inseridos na lista de símbolos e mudar o count pelo buffer de palavra (que representa o número). *
+Para mudar esse funcionamento, bastou remover a parte do código em que os números eram inseridos na lista de símbolos e mudar o count pelo buffer de palavra (que representa o número).
