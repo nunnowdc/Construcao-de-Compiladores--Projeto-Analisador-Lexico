@@ -1,4 +1,4 @@
-**Relatório com o passo a passo que realizei para construir o analisador léxico **
+<h1>Relatório com o passo a passo que realizei para construir o analisador léxico</h1> 
 
  
 
