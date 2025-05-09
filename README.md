@@ -1,8 +1,6 @@
-<h1>Relatório com o passo a passo que realizei para construir o analisador léxico</h1> 
+<h2>Relatório com o passo a passo que realizei para construir o analisador léxico</h2>
 
- 
-
- 
+<p>-</p>
 
 Para desenvolver esta etapa do processo de compilação, utilizei como referência uma abordagem semelhante à dos separadores de moedas, que são organizados de acordo com o tamanho. Nos separadores, as moedas deslizam por uma rampa repleta de furos que aumentam gradualmente em diâmetro, permitindo que cada moeda permaneça em seu caminho até que reste apenas uma opção. Nessa analogia, os lexemas e caracteres correspondem às moedas, enquanto os furos na rampa representam as condicionais do código.
 
